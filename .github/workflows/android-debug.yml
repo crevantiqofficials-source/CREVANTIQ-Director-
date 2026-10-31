@@ -2,7 +2,7 @@ name: Android Debug Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "fix/android-076-build-wrapperless" ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -39,10 +39,10 @@ jobs:
           sdkmanager "build-tools;35.0.0"
 
       - name: Run unit tests
-        run: ./gradlew --no-daemon testDebugUnitTest
+        run: gradle --no-daemon testDebugUnitTest
 
       - name: Build debug APK
-        run: ./gradlew --no-daemon assembleDebug
+        run: gradle --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
