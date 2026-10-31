@@ -1,8 +1,9 @@
+# Re-run CI after the Compose compiler fix; build configuration unchanged.
 name: Android Debug Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "fix/android-076-build-wrapperless" ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -29,20 +30,25 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Setup Android
-        uses: android-actions/setup-android@v3
-
-      - name: Install platform-tools and platforms
+      - name: Configure Android SDK
+        shell: bash
         run: |
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-35"
-          sdkmanager "build-tools;35.0.0"
+          echo "ANDROID_HOME=${ANDROID_HOME:-/usr/local/lib/android/sdk}" >> "$GITHUB_ENV"
+          SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "Android sdkmanager not found under $SDK_ROOT/cmdline-tools" >&2
+            exit 1
+          fi
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Run unit tests
-        run: ./gradlew --no-daemon testDebugUnitTest
+        run: gradle --no-daemon testDebugUnitTest
 
       - name: Build debug APK
-        run: ./gradlew --no-daemon assembleDebug
+        run: gradle --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
