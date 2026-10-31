@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,7 +65,7 @@ fun WelcomeScreen() {
             text = "DIRECTOR",
             fontSize = 36.sp,
             fontWeight = FontWeight.SemiBold,
-            brush = Brush.horizontalGradient(listOf(accentStart, accentEnd)),
+            style = TextStyle(brush = Brush.horizontalGradient(listOf(accentStart, accentEnd))),
             modifier = Modifier.padding(bottom = 24.dp)
         )
         Text(
