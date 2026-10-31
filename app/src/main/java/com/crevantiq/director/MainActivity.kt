@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -26,18 +28,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-private val Bg = Color(0xFF05101F)
-private val Panel = Color(0xFF0B182A)
-private val Surface = Color(0xFF0E2038)
-private val Line = Color(0xFF1D395C)
-private val Cyan = Color(0xFF14B8FF)
-private val Violet = Color(0xFF8B5CF6)
-private val Emerald = Color(0xFF6FF1BD)
-private val Amber = Color(0xFFFFD17B)
-private val Coral = Color(0xFFFF8B9C)
-private val Ink = Color(0xFFEEF5FF)
-private val Muted = Color(0xFF9CB0CF)
-private val Quiet = Color(0xFF6F85A4)
+private val Bg = Color(0xFF090D16)
+private val Panel = Color(0xFF111827)
+private val Surface = Color(0xFF1E293B)
+private val Line = Color(0xFF334155)
+private val Cyan = Color(0xFF38BDF8)
+private val Violet = Color(0xFF818CF8)
+private val Emerald = Color(0xFF34D399)
+private val Amber = Color(0xFFFBBF24)
+private val Coral = Color(0xFFF472B6)
+private val Ink = Color(0xFFF8FAFC)
+private val Muted = Color(0xFF94A3B8)
+private val Quiet = Color(0xFF64748B)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,23 +88,26 @@ private fun CreatorWorkspace() {
         containerColor=Bg,
         topBar={
             Column(Modifier.fillMaxWidth().background(Bg).statusBarsPadding()) {
-                Row(Modifier.fillMaxWidth().padding(horizontal=18.dp,vertical=12.dp),verticalAlignment=Alignment.CenterVertically) {
-                    Box(Modifier.size(42.dp).clip(RoundedCornerShape(13.dp)).background(Brush.linearGradient(listOf(Cyan,Violet))),contentAlignment=Alignment.Center) {
-                        Text("C",color=Bg,fontSize=25.sp,fontWeight=FontWeight.Black)
+                Row(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=10.dp),verticalAlignment=Alignment.CenterVertically) {
+                    Box(Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(Brush.linearGradient(listOf(Color(0xFF2563EB),Violet,Coral))),contentAlignment=Alignment.Center) {
+                        Text("C",color=Ink,fontSize=22.sp,fontWeight=FontWeight.Black)
                     }
-                    Spacer(Modifier.width(11.dp))
+                    Spacer(Modifier.width(9.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("CREVANTIQ",color=Ink,fontSize=18.sp,fontWeight=FontWeight.Black,letterSpacing=1.6.sp)
-                        Text("DIRECTOR  /  CREATOR OPERATING SYSTEM",color=Cyan,fontSize=8.sp,fontWeight=FontWeight.Bold,letterSpacing=.8.sp)
+                        Text("CREVANTIQ",color=Ink,fontSize=16.sp,fontWeight=FontWeight.Black,letterSpacing=1.3.sp)
+                        Text("DIRECTOR",color=Muted,fontSize=8.sp,fontWeight=FontWeight.Bold,letterSpacing=1.8.sp)
                     }
-                    Column(horizontalAlignment=Alignment.End) {
-                        Text("v0.7.6",color=Muted,fontSize=10.sp)
-                        Row(verticalAlignment=Alignment.CenterVertically) { Box(Modifier.size(6.dp).clip(CircleShape).background(Emerald)); Spacer(Modifier.width(4.dp)); Text("LOCAL WORKSPACE",color=Emerald,fontSize=8.sp,fontWeight=FontWeight.Bold) }
+                    IconButton(onClick={}) { Icon(Icons.Default.Notifications,null,tint=Muted) }
+                    Box(Modifier.size(34.dp).clip(CircleShape).background(Brush.linearGradient(listOf(Violet,Coral))),contentAlignment=Alignment.Center) {
+                        Text("CP",color=Ink,fontSize=10.sp,fontWeight=FontWeight.Bold)
                     }
                 }
+                Row(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=5.dp),verticalAlignment=Alignment.CenterVertically) {
+                    OutlinedTextField(value=search,onValueChange={search=it},modifier=Modifier.weight(1f).heightIn(min=46.dp),singleLine=true,placeholder={Text("What do you want to create today?",fontSize=11.sp,color=Muted)},leadingIcon={Icon(Icons.Default.Search,null,tint=Muted,modifier=Modifier.size(17.dp))},colors=FieldColors(),shape=RoundedCornerShape(24.dp))
+                }
                 HorizontalDivider(color=Line.copy(alpha=.65f))
-                Row(Modifier.fillMaxWidth().padding(horizontal=14.dp,vertical=8.dp),horizontalArrangement=Arrangement.spacedBy(7.dp)) {
-                    listOf(Screen.HOME,Screen.PROJECTS,Screen.ASSETS,Screen.MEDIA,Screen.PLATFORMS).forEach { s ->
+                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal=12.dp,vertical=7.dp),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
+                    Screen.values().forEach { s ->
                         FilterChip(selected=screen==s,onClick={screen=s},label={Text(s.title,fontSize=9.sp)},colors=FilterChipDefaults.filterChipColors(selectedContainerColor=Cyan.copy(alpha=.16f),selectedLabelColor=Cyan,containerColor=Panel,labelColor=Muted),border=FilterChipDefaults.filterChipBorder(enabled=true,selected=screen==s,borderColor=Line,selectedBorderColor=Cyan.copy(alpha=.5f)))
                     }
                 }
@@ -158,18 +163,34 @@ private fun HomeScreen(modifier:Modifier,mode:String,setMode:(String)->Unit,proj
             }
         }
         item {
-            Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(19.dp)).background(Brush.linearGradient(listOf(Color(0xFF10334C),Color(0xFF25234C)))).border(1.dp,Line.copy(alpha=.7f),RoundedCornerShape(19.dp)).padding(17.dp),verticalArrangement=Arrangement.spacedBy(9.dp)) {
-                Row(verticalAlignment=Alignment.CenterVertically) { Text("TODAY'S CREATOR BRIEF",color=Cyan,fontSize=10.sp,fontWeight=FontWeight.Bold,letterSpacing=1.sp); Spacer(Modifier.weight(1f)); StatusPill("READY",Emerald) }
-                Text("One idea. A complete creative workflow.",color=Ink,fontSize=21.sp,fontWeight=FontWeight.Bold,lineHeight=27.sp)
-                Text("Plan  /  Create  /  Organize  /  Review",color=Muted,fontSize=12.sp)
-                Button(onClick=create,modifier=Modifier.fillMaxWidth(),shape=RoundedCornerShape(11.dp),colors=ButtonDefaults.buttonColors(containerColor=Cyan,contentColor=Bg)) { Text("CREATE A NEW CONCEPT",fontWeight=FontWeight.Black,fontSize=11.sp) }
+            Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(19.dp)).background(Brush.linearGradient(listOf(Color(0xFF172554),Color(0xFF111827),Color(0xFF1E1B4B)))).border(1.dp,Line.copy(alpha=.7f),RoundedCornerShape(19.dp)).padding(18.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
+                Row(verticalAlignment=Alignment.CenterVertically) { StatusPill("TODAY'S CREATOR BRIEF",Cyan); Spacer(Modifier.weight(1f)); Icon(Icons.Default.AutoAwesome,null,tint=Violet) }
+                Text("Welcome back!",color=Ink,fontSize=22.sp,fontWeight=FontWeight.Bold)
+                Text("Let's create something amazing today.",color=Muted,fontSize=12.sp)
+                Text("Good Content Brighter Opportunities",color=Quiet,fontSize=10.sp)
+                Button(onClick=create,modifier=Modifier.fillMaxWidth(),shape=RoundedCornerShape(11.dp),colors=ButtonDefaults.buttonColors(containerColor=Cyan,contentColor=Bg)) { Text("＋  CREATE NEW CONTENT",fontWeight=FontWeight.Black,fontSize=11.sp) }
             }
         }
         item {
-            Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                MetricCard("PROJECTS",projectCount.toString(),"In workspace",Modifier.weight(1f))
-                MetricCard("CONCEPTS",conceptCount.toString(),"Saved locally",Modifier.weight(1f))
-                MetricCard("PLATFORMS","0 / 4","Not connected",Modifier.weight(1f))
+            Text("CONNECTED PLATFORM OVERVIEW",color=Muted,fontSize=9.sp,fontWeight=FontWeight.Bold,letterSpacing=1.sp)
+            Row(horizontalArrangement=Arrangement.spacedBy(7.dp)) {
+                PlatformMetric("YouTube","125.4K","Subscribers","▶",Color(0xFFEF4444),Modifier.weight(1f))
+                PlatformMetric("Facebook","48.2K","Followers","f",Color(0xFF2563EB),Modifier.weight(1f))
+            }
+            Row(horizontalArrangement=Arrangement.spacedBy(7.dp)) {
+                PlatformMetric("Instagram","76.9K","Followers","◎",Color(0xFFDB2777),Modifier.weight(1f))
+                PlatformMetric("TikTok","312.6K","Followers","♪",Color(0xFF020617),Modifier.weight(1f))
+            }
+            Text("Sample figures from the supplied design • demo only, not connected account data.",color=Quiet,fontSize=8.sp)
+        }
+        item {
+            PanelCard {
+                SectionHeading("WORKSPACE SNAPSHOT","LOCAL DEMO")
+                Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                    MetricCard("PROJECTS",projectCount.toString(),"In workspace",Modifier.weight(1f))
+                    MetricCard("CONCEPTS",conceptCount.toString(),"Saved locally",Modifier.weight(1f))
+                    MetricCard("PLATFORMS","0 / 4","Not connected",Modifier.weight(1f))
+                }
             }
         }
         item { PanelCard {
@@ -385,6 +406,17 @@ private fun PanelCard(content:@Composable ColumnScope.()->Unit) {
     Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
         Text(title,color=Cyan,fontSize=9.sp,fontWeight=FontWeight.Bold,letterSpacing=.8.sp,modifier=Modifier.weight(1f))
         Text(meta,color=Quiet,fontSize=8.sp,fontWeight=FontWeight.Bold)
+    }
+}
+@Composable private fun PlatformMetric(name:String,value:String,detail:String,mark:String,tint:Color,modifier:Modifier) {
+    Column(modifier.clip(RoundedCornerShape(13.dp)).background(Panel).border(1.dp,Line,RoundedCornerShape(13.dp)).padding(10.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+        Row(verticalAlignment=Alignment.CenterVertically) {
+            Box(Modifier.size(23.dp).clip(RoundedCornerShape(7.dp)).background(tint),contentAlignment=Alignment.Center) { Text(mark,color=Ink,fontSize=12.sp,fontWeight=FontWeight.Black) }
+            Spacer(Modifier.width(6.dp))
+            Text(name,color=Muted,fontSize=9.sp,fontWeight=FontWeight.Bold,maxLines=1,overflow=TextOverflow.Ellipsis)
+        }
+        Text(value,color=Ink,fontSize=18.sp,fontWeight=FontWeight.Bold)
+        Text(detail,color=Quiet,fontSize=8.sp)
     }
 }
 @Composable private fun MetricCard(title:String,value:String,detail:String,modifier:Modifier) {
