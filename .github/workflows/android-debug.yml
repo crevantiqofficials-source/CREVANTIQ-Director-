@@ -1,3 +1,4 @@
+# Re-run CI after the Compose compiler fix; build configuration unchanged.
 name: Android Debug Build
 
 on:
