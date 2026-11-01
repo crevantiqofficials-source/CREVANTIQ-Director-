@@ -2,16 +2,17 @@
 
 A standalone Vite + React creator workspace preview.
 
-## Run in GitHub Codespaces
+## Run locally
 ```bash
 cd creator-web
 npm install
 npm run dev
 ```
-Open forwarded port **13001** (Vite binds to 0.0.0.0).
+Open port **13001** (Vite binds to 0.0.0.0).
 
-## Build
+## Production build
 ```bash
+npm install
 npm run build
 ```
 
